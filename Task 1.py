@@ -13,9 +13,7 @@ def load_data(filepath):
         for line in file:
             data.append(json.loads(line.rstrip()))
     return data
-
-
-def main():
+def load_pandas():
     business = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/business.json"))
     # Create dummy variables for categories
     categories_df = business['categories'].str.join(sep=',').str.get_dummies(sep=',')
@@ -26,9 +24,12 @@ def main():
     #Instead of dropping the categories column, we're going to keep it around, but reformat it as a tuple
     business['categories'] = business['categories'].apply(lambda x: tuple(x))
     print(business['categories'])
-#    print(business[business['Chinese'] == 1].head())
-#    print(business['Chinese'].sum())
-#    review = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/review.json"))
+    print(business[business['Chinese'] == 1].head())
+    print(business['Chinese'].sum())
+    print(categories)
+def main():
+    load_pandas()
+    review = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/review.json"))
 
 if __name__ == '__main__':
 	main()
