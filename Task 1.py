@@ -13,17 +13,26 @@ def load_data(filepath):
             data.append(json.loads(line.rstrip()))
     return data
 def preprocessing():
-    business = pd.DataFrame.from_dict(load_data("business.json"))
-    review = pd.DataFrame.from_dict(load_data("review.json"))
-    tip = pd.DataFrame.from_dict(load_data("tip.json"))
-    business = business[['business_id','categories']]
-    review = review[['business_id','text']]
-    tip= tip[['business_id','text']]
-    review_business = pd.merge(review, business, on='business_id')
-    review_business.columns = ['business_id','review','categories']
-    data =  pd.merge(tip, review_business, on='business_id')
-    print(data.head(2))
-    data.to_json('yelp_data.json')
+	business = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/business.json"))
+	review = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/review.json"))
+	tip = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/tip.json"))
+	business = business[['business_id','categories']]
+	review = review[['business_id','text']]
+	tip= tip[['business_id','text']]
+	reviewData = pd.merge(review, business, on='business_id')
+	reviewData.columns = ['business_id','review','categories']
+	tipData = pd.merge(tip, business, on='business_id')
+	tipData.columns = ['business_id','tip','categories']
+	print("Tip Data:\t",tip.shape)
+	print("Review Data:\t",review.shape)
+	print("Business Data:\t",business.shape)
+	print("Final Review Data:\t",reviewData.shape)
+	print("Final Tip Data:\t",tipData.shape)
+	del review
+	del business
+	del tip
+
+	
 def main():
     preprocessing()
     
