@@ -13,23 +13,21 @@ def load_data(filepath):
         for line in file:
             data.append(json.loads(line.rstrip()))
     return data
-def load_pandas():
+def preprocessing():
     business = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/business.json"))
-    # Create dummy variables for categories
-    categories_df = business['categories'].str.join(sep=',').str.get_dummies(sep=',')
-    # Save the list of categories for future use
-    categories = categories_df.columns.values
-    # Merge it with our original dataframe
-    business = pd.merge(business, categories_df, left_index = True, right_index = True)
-    #Instead of dropping the categories column, we're going to keep it around, but reformat it as a tuple
-    business['categories'] = business['categories'].apply(lambda x: tuple(x))
-    print(business['categories'])
-    print(business[business['Chinese'] == 1].head())
-    print(business['Chinese'].sum())
-    print(categories)
-def main():
-    load_pandas()
     review = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/review.json"))
+    tip = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/tip.json"))
+    business = business[['business_id','categories']]
+    review = review[['business_id','text']]
+    tip= tip[['business_id','text']]
+    review_business = pd.merge(review, business, on='business_id')
+    review_business.columns = ['business_id','review','categories']
+    data =  pd.merge(tip, review_business, on='business_id')
+    print(data.head(2))
+    data.to_json('yelp_data.json')
+def main():
+    preprocessing()
+    
 
 if __name__ == '__main__':
 	main()
