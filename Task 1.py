@@ -4,38 +4,45 @@ Created on Sat Nov  5 13:09:04 2016
 
 @author: Vipul Munot
 """
-import json
+import re
+import warnings
 import pandas as pd
-def load_data(filepath):
-    data = []
-    with open(filepath) as file:
-        for line in file:
-            data.append(json.loads(line.rstrip()))
-    return data
-def preprocessing():
-	business = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/business.json"))
-	review = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/review.json"))
-	tip = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/tip.json"))
-	business = business[['business_id','categories']]
-	review = review[['business_id','text']]
-	tip= tip[['business_id','text']]
-	reviewData = pd.merge(review, business, on='business_id')
-	reviewData.columns = ['business_id','review','categories']
-	tipData = pd.merge(tip, business, on='business_id')
-	tipData.columns = ['business_id','tip','categories']
-	print("Tip Data:\t",tip.shape)
-	print("Review Data:\t",review.shape)
-	print("Business Data:\t",business.shape)
-	print("Final Review Data:\t",reviewData.shape)
-	print("Final Tip Data:\t",tipData.shape)
-	del review
-	del business
-	del tip
+from bs4 import BeautifulSoup
+import mongo
+warnings.filterwarnings("ignore")
 
-	
-def main():
-    preprocessing()
-    
+def convert_words( raw_review ):
+    review_text = BeautifulSoup(raw_review,'lxml').get_text() 
+    letters_only = re.sub("[^a-zA-Z]", " ", review_text) 
+    words = letters_only.lower().split()                             
+    return( " ".join( words )) 
 
-if __name__ == '__main__':
-	main()
+''' 
+Filtering Categories
+''' 
+business =  pd.DataFrame(list(mongo.mongo_business))
+business = business[['business_id','categories']]
+''' 
+Filtering Tips
+''' 
+tipData =  pd.DataFrame(list(mongo.mongo_tip))
+tipData = tipData[['business_id','text']]
+tipData.columns = ['business_id','tip']
+tipData.loc[:,'tip'] = tipData['tip'].map(convert_words)
+
+''' 
+Merging Categories and Tips
+''' 
+tip = pd.merge(tipData, business, on='business_id')
+
+''' 
+Filtering Categories
+''' 
+reviewData =  pd.DataFrame(list(mongo.mongo_review))
+reviewData = reviewData[['business_id','text']]
+reviewData.columns = ['business_id','review']
+reviewData.loc[:,'tip'] = reviewData['review'].map(convert_words)
+''' 
+Merging Categories and Reviews
+''' 
+review = pd.merge(reviewData, business, on='business_id')    
