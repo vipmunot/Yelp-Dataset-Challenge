@@ -20,3 +20,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+### IPythonNotebook ###
+# Temporary data
+.ipynb_checkpoints/
