@@ -13,9 +13,9 @@ def load_data(filepath):
             data.append(json.loads(line.rstrip()))
     return data
 def preprocessing():
-    business = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/business.json"))
-    review = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/review.json"))
-    tip = pd.DataFrame.from_dict(load_data("E:/IUB/Search/Project/tip.json"))
+    business = pd.DataFrame.from_dict(load_data("business.json"))
+    review = pd.DataFrame.from_dict(load_data("review.json"))
+    tip = pd.DataFrame.from_dict(load_data("tip.json"))
     business = business[['business_id','categories']]
     review = review[['business_id','text']]
     tip= tip[['business_id','text']]
