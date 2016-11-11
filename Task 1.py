@@ -3,7 +3,6 @@
 Created on Sat Nov  5 13:09:04 2016
 
 @author: Vipul Munot
-Link: https://github.com/karenxiao/pandas-express
 """
 import json
 import pandas as pd
