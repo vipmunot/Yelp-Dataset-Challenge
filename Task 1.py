@@ -46,3 +46,6 @@ reviewData.loc[:,'tip'] = reviewData['review'].map(convert_words)
 Merging Categories and Reviews
 ''' 
 review = pd.merge(reviewData, business, on='business_id')    
+#tip.to_pickle('tip.pkl')
+#review = review[:30000]
+#review.to_pickle('review.pkl')
