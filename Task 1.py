@@ -41,7 +41,7 @@ Filtering Categories
 reviewData =  pd.DataFrame(list(mongo.mongo_review))
 reviewData = reviewData[['business_id','text']]
 reviewData.columns = ['business_id','review']
-reviewData.loc[:,'tip'] = reviewData['review'].map(convert_words)
+reviewData.loc[:,'review'] = reviewData['review'].map(convert_words)
 ''' 
 Merging Categories and Reviews
 ''' 
