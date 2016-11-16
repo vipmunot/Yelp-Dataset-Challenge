@@ -17,6 +17,20 @@ def convert_words( raw_review ):
     words = letters_only.lower().split()                             
     return( " ".join( words )) 
 
+def replicateClasses(review):
+          
+    categories = review["categories"]    
+    data = pd.DataFrame(columns=('business_id', 'review', 'categories'))    
+    r_index = 0
+    count = 0
+    for i in range(len(categories)):
+        for item in categories[i]:
+            # print(item)
+            data.loc[len(data)-1] = [review["business_id"][r_index], review["review"][r_index], item]
+        r_index += 1
+        count += len(categories[i])
+    print("Total Categories:\t",count)
+    return (data)    
 ''' 
 Filtering Categories
 ''' 
@@ -45,7 +59,8 @@ reviewData.loc[:,'review'] = reviewData['review'].map(convert_words)
 ''' 
 Merging Categories and Reviews
 ''' 
-review = pd.merge(reviewData, business, on='business_id')    
-#tip.to_pickle('tip.pkl')
-#review = review[:30000]
-#review.to_pickle('review.pkl')
+review = pd.merge(reviewData, business, on='business_id')   
+review = replicateClasses(review)
+tip.to_pickle('tip.pkl')
+review = review[:30000]
+review.to_pickle('review.pkl')
