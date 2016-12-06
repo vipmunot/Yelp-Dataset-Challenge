@@ -1,0 +1,22 @@
+(lp0
+S'Food in general'
+p1
+aS'Service Speed & Delivery'
+p2
+aS'Bar & Liquor'
+p3
+aS'Cafe Menu & Service'
+p4
+aS"Staff's Attitude"
+p5
+aS'Meat Menu & Kitchen Hygiene'
+p6
+aS'Fast Food Items'
+p7
+aS'Seafood Menu Items'
+p8
+aS'Ambiance & Hospitality'
+p9
+aS'Dinner & Drinks'
+p10
+a.

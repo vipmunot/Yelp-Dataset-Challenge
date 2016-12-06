@@ -1,9 +1,8 @@
-import gensim
 import sys
 import nltk
 import pickle
 import pandas as pd
-
+import gensim
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
@@ -12,7 +11,7 @@ from gensim import corpora, models
 from textblob import TextBlob
 from string import punctuation
 
-def analyzeSentiment(inputStrings):
+def analyze_sentiment(input_strings):
     positive = 0
     negative = 0
     neutral = 0
@@ -23,7 +22,7 @@ def analyzeSentiment(inputStrings):
 
     print("Analyzing sentiments")
     count = 1
-    for string in inputStrings:
+    for string in input_strings:
         text = TextBlob(string)
 
         if text.sentiment.polarity < -0.15:
@@ -51,9 +50,9 @@ def analyzeSentiment(inputStrings):
     #     print string
     #     dummy = raw_input("")
 
-    buildTopicModel(positiveReviews)
+    build_topic_model(positiveReviews)
 
-def getWordVector(inputString):
+def get_word_vector(inputString):
     tokenizer = RegexpTokenizer(r'\w+\'?\w+')
 
     # default English stop words list
@@ -81,7 +80,7 @@ def getWordVector(inputString):
 
     return stemmed_tokens
 
-def getTopics(bagOfWords):
+def get_topics(bagOfWords):
     topics = pd.read_pickle("trained-model-topics")
     ldaModel = pd.read_pickle("trained-negative-model")
     ldaDictionary = pd.read_pickle("model-dictionary")
@@ -97,18 +96,17 @@ def getTopics(bagOfWords):
 
     return topics_found
 
-def buildTopicModel(inputStrings):
+def build_topic_model(input, review_type):
 
-
-    # list for tokenized documents in loop
+    print 'Inside buildTopicModel'
     texts = []
 
     count = 1
     # loop through document list
-    for i in inputStrings:
+    for i in input:
         # clean and tokenize document string
         # add tokens to list
-        texts.append(getWordVector(i))
+        texts.append(get_word_vector(i))
 
         sys.stdout.write("\r" + "%d strings processed" % count)
         sys.stdout.flush()
@@ -124,12 +122,12 @@ def buildTopicModel(inputStrings):
     print("Bag of words is %d documents long" % len(corpus))
 
     # generate LDA model
-    ldaModel = gensim.models.ldamulticore.LdaMulticore(corpus, num_topics=10, id2word=dictionary, workers=2, passes=1)
+    ldaModel = gensim.models.ldamulticore.LdaMulticore(corpus, num_topics=10, id2word=dictionary, workers=2, passes=20)
 
     print('Modelling done for LDA')
     for topic in ldaModel.print_topics(num_topics=10, num_words=10):
         print(topic)
 
-    pickle.dump(ldaModel, open("trained-negative-model",'w'))
-    pickle.dump(dictionary, open("model-dictionary", 'w'))
-    print("Model written to file --trained-negative-model--")
+    pickle.dump(ldaModel, open("trained-"+review_type+"-model",'w'))
+    pickle.dump(dictionary, open("model-dictionary-"+review_type, 'w'))
+    print("Model written to file --trained-model--")
