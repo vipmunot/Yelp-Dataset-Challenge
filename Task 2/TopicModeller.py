@@ -17,8 +17,6 @@ def analyze_sentiment(input_strings):
     neutral = 0
 
     positiveReviews = []
-    negativeReviews = []
-    neutralReviews = []
 
     print("Analyzing sentiments")
     count = 1
@@ -29,6 +27,7 @@ def analyze_sentiment(input_strings):
             negative += 1
             # negativeReviews.append(string)
         elif text.sentiment.polarity > 0.15:
+
             positive += 1
             positiveReviews.append(string)
             # print text.noun_phrases
@@ -72,11 +71,9 @@ def get_word_vector(inputString):
     pos_tagged = nltk.pos_tag(stopped_tokens)
 
     # stem tokens
-    # p_stemmer.stem(i[0]) and other additions in if condition - or i[1][0] == 'R' or i[1][0] == 'V'
-
     stemmed_tokens = [i[0]
                         for i in pos_tagged
-                        if i[1][0] == 'N'] # or i[1][0] == 'J']
+                        if i[1][0] == 'N' or i[1][0] == 'J']
 
     return stemmed_tokens
 
